@@ -102,10 +102,7 @@ if __name__ == "__main__":
     test_label = tf.convert_to_tensor(test_label)
     collocation_feature= tf.convert_to_tensor(collocation_feature)
 
-    # train_data = (train_data[:,:3], train_data[:,3:])
-    # validation_data = (validation_data[:, :3], validation_data[:, 3:])
-    # collocation_data = (collocation_data[:, :3], collocation_data[:, 3:])
-    # test_data = (test_data[:, :3], test_data[:, 3:])
+
 
     train_feature_dict = {"train": train_feature[:params.n_train],
                           "collocation": collocation_feature[:params.n_collocation]}
@@ -114,6 +111,8 @@ if __name__ == "__main__":
     test_feature = test_feature[:params.n_test]
     test_target = test_label[:params.n_test]
 
+
+    # get the mean and standard deviation of the feature and label for normalization
     X_mean, X_std = np.mean(train_feature[:params.n_train], axis=0, keepdims=True), np.std(
         train_feature[:params.n_train], axis=0, keepdims=True)
     Y_mean, Y_std = np.mean(train_target, axis=0, keepdims=True), np.std(train_target, axis=0, keepdims=True)

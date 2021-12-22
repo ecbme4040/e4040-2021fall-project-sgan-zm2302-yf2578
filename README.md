@@ -88,7 +88,8 @@ keras layers, and code the combination of networks (e.g. generator+discriminator
 # Organization of this directory
 To be populated by students, as shown in previous assignments.
 Create a directory/file tree
-./
+
+```./
 ├── build_idm_data.py
 ├── build_ngsim_data.py
 ├── data
