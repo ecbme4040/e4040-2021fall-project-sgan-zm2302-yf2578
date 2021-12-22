@@ -56,7 +56,7 @@ real-world NGSIM dataset
  - build_ngsim_data.py: process NGSIM data
  - main_lstm.py: main script
  - viz.py: code for visualization
- - report.pdf: report
+ - E4040.2021Fall.SGAN.report.zm2302.yf2578.pdf: report
 
 #### src
 - layers: class for the generator, discriminator, poster estimator, and neural networks
