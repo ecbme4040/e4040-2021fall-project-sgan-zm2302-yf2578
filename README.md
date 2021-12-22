@@ -43,6 +43,32 @@ python main_lstm.py --experiment_dir experiments/ngsim/gan --data_dir data/ngsim
 python viz.py --experiment_dir experiments/ngsim/gan --sudoku --interval --metrics_statistic --force_overwrite
 ```
 
+# Code architecture
+####rood directory
+ - data: a folder containing processed data
+ - experiments: folders to save everything related to one training (or one experiment), including 
+ - image: images for README.md
+ - raw_data: a folder containing raw NGSIM trajectory data
+ - src: everything related to the model structure, including GAN model, trianing and test scripts.
+ - tmp: temporary folder
+ - build_idm_data.py: generate numerical data from the intelligent driving model. Not used in this case study where we use the 
+real-world NGSIM dataset
+ - build_ngsim_data.py: process NGSIM data
+ - main_lstm.py: main script
+ - viz.py: code for visualization
+ - report.pdf: report
+
+#### src
+- layers: class for the generator, discriminator, poster estimator, and neural networks
+- metrics_factory: functions to calculate the KL divergence and NLPD
+- models: contains GAN model and NN-Drop model, and relevant functions to calculate the loss functions
+- argparse.py: to parse the argument
+- helper_funcs.py: functions like save and load
+- metrics.py: map the names of metrics to the metrics instances
+- picklefuncs.py: tool functions
+- training.py: tranining and test procedures.
+- utils.py: tool functions
+
 # Dataset
 Raw dataset is stored in the folder "raw_data/NGSIM". It is a pickle file contains the trajectory information of the follower and the leader.
 To convert the time-series trajectory to feature-label pairs, "build_ngsim_data.py" should be run:
@@ -56,29 +82,176 @@ be save in the .csv file in the same location as the json file.
 This step can be skipped as the processed data is in the repo.
 
 # Model
-
-  
-# Detailed instructions how to submit this assignment/homework/project:
-1. The assignment will be distributed as a github classroom assignment - as a special repository accessed through a link
-
-2. A students copy of the assignment gets created automatically with a special name
-3. Students must rename the repo per instructions below
-
-4. The solution(s) to the assignment have to be submitted inside that repository as a set of "solved" Jupyter Notebook(s), and several modified python files which reside in directories/subdirectories
-
-5. Three files/screenshots need to be uploaded into the directory "figures" which prove that the assignment has been done in the cloud
-
-6. Code to be graded from github
-
-7. If some model is too large for github- create google (liondrive) directory, upload, and share the link with E4040TAs@columbia.edu
-
-8. Submit report as a pdf file, through courseworks upload, and also have the pdf report in the root of the github repo for the group
-
-
-## (Re)naming of a project repository shared by multiple students (TODO students)
-INSTRUCTIONS for naming the students' solution repository for assignments with several students, such as the final project. Students must use a 4-letter groupID, the same one that was chosed in the class spreadsheet: 
-* Template: e4040-2021Fall-Project-GroupID-UNI1-UNI2-UNI3. -> Example: e4040-2021Fall-Project-MEME-zz9999-aa9999-aa0000.
+We uses the keras subclass to customize our own model. Specifically, we code the single networks (e.g. generator) as
+keras layers, and code the combination of networks (e.g. generator+discriminator) as keras models.
 
 # Organization of this directory
 To be populated by students, as shown in previous assignments.
 Create a directory/file tree
+./
+├── build_idm_data.py
+├── build_ngsim_data.py
+├── data
+│   └── ngsim
+│       ├── ngsim_v_dt=01
+│       │   ├── collocation_feature.csv
+│       │   ├── data_para.json
+│       │   ├── test_feature.csv
+│       │   ├── test_label.csv
+│       │   ├── train_feature.csv
+│       │   ├── train_label.csv
+│       │   ├── validation_feature.csv
+│       │   └── validation_label.csv
+│       ├── ngsim_v_dt=1
+│       │   ├── collocation_feature.csv
+│       │   ├── data_para.json
+│       │   ├── test_feature.csv
+│       │   ├── test_label.csv
+│       │   ├── train_feature.csv
+│       │   ├── train_label.csv
+│       │   ├── validation_feature.csv
+│       │   └── validation_label.csv
+│       └── ngsim_v_dt=5
+│           ├── collocation_feature.csv
+│           ├── data_para.json
+│           ├── test_feature.csv
+│           ├── test_label.csv
+│           ├── train_feature.csv
+│           ├── train_label.csv
+│           ├── validation_feature.csv
+│           └── validation_label.csv
+├── experiments
+│   └── ngsim
+│       ├── gan
+│       │   ├── best_weights
+│       │   │   ├── after-epoch-739.data-00000-of-00001
+│       │   │   ├── after-epoch-739.index
+│       │   │   └── checkpoint
+│       │   ├── experiment_setting.json
+│       │   ├── last_weights
+│       │   │   ├── after-epoch-1000.data-00000-of-00001
+│       │   │   ├── after-epoch-1000.index
+│       │   │   └── checkpoint
+│       │   ├── metrics_eval_best_weights.json
+│       │   ├── metrics_eval_last_weights.json
+│       │   ├── physics_last_weights
+│       │   ├── summary
+│       │   │   ├── eval
+│       │   │   │   └── events.out.tfevents.1640146605.zhaobinpc.19317.1.v2
+│       │   │   └── train
+│       │   │       └── events.out.tfevents.1640146605.zhaobinpc.19317.0.v2
+│       │   ├── test
+│       │   │   ├── best_weights
+│       │   │   │   ├── features_test.csv
+│       │   │   │   ├── kl_test.csv
+│       │   │   │   ├── metrics_test.json
+│       │   │   │   ├── predictions_test.csv
+│       │   │   │   └── targets_test.csv
+│       │   │   └── last_weights
+│       │   │       ├── features_test.csv
+│       │   │       ├── kl_test.csv
+│       │   │       ├── metrics_test.json
+│       │   │       ├── predictions_test.csv
+│       │   │       └── targets_test.csv
+│       │   ├── train.log
+│       │   └── viz
+│       │       ├── best_weights
+│       │       │   ├── metrics_statistic.json
+│       │       │   ├── mode=debug-sudoku-level=3-lowest_kl=0.png
+│       │       │   ├── mode=debug-sudoku-level=3-lowest_kl=1.png
+│       │       │   ├── mode=debug-type=confidence-sorted=True-bounds=False.png
+│       │       │   ├── mode=debug-type=prediction-sorted=True-bounds=False.png
+│       │       │   ├── mode=paper-sudoku-level=3-lowest_kl=0.png
+│       │       │   ├── mode=paper-sudoku-level=3-lowest_kl=1.png
+│       │       │   ├── mode=paper-type=confidence-sorted=True-bounds=False.png
+│       │       │   └── mode=paper-type=prediction-sorted=True-bounds=False.png
+│       │       └── last_weights
+│       │           ├── metrics_statistic.json
+│       │           ├── mode=debug-sudoku-level=3-lowest_kl=0.png
+│       │           ├── mode=debug-sudoku-level=3-lowest_kl=1.png
+│       │           ├── mode=debug-type=confidence-sorted=True-bounds=False.png
+│       │           ├── mode=debug-type=prediction-sorted=True-bounds=False.png
+│       │           ├── mode=paper-sudoku-level=3-lowest_kl=0.png
+│       │           ├── mode=paper-sudoku-level=3-lowest_kl=1.png
+│       │           ├── mode=paper-type=confidence-sorted=True-bounds=False.png
+│       │           └── mode=paper-type=prediction-sorted=True-bounds=False.png
+│       └── nn_drop
+│           ├── experiment_setting.json
+│           └── train.log
+├── image
+│   └── mode=paper-sudoku-level=3-lowest_kl=1.png
+├── main.ipynb
+├── main_lstm.py
+├── raw_data
+│   └── ngsim
+│       └── IDOVM_para_and_mid_and_73weight_paraspace_cluster.pickle
+├── README.md
+├── report.pdf
+├── src
+│   ├── argparse.py
+│   ├── helper_funcs.py
+│   ├── __init__.py
+│   ├── layers
+│   │   ├── gan.py
+│   │   ├── __init__.py
+│   │   ├── nn_drop.py
+│   │   ├── __pycache__
+│   │   │   ├── gan.cpython-36.pyc
+│   │   │   ├── gan.cpython-37.pyc
+│   │   │   ├── __init__.cpython-36.pyc
+│   │   │   ├── __init__.cpython-37.pyc
+│   │   │   ├── nn_drop.cpython-36.pyc
+│   │   │   ├── nn_drop.cpython-37.pyc
+│   │   │   ├── utils.cpython-36.pyc
+│   │   │   └── utils.cpython-37.pyc
+│   │   └── utils.py
+│   ├── metrics_factory
+│   │   ├── get_KL.py
+│   │   ├── get_NLPD.py
+│   │   ├── __init__.py
+│   │   └── __pycache__
+│   │       ├── get_KL.cpython-36.pyc
+│   │       ├── get_KL.cpython-37.pyc
+│   │       ├── get_NLPD.cpython-36.pyc
+│   │       ├── get_NLPD.cpython-37.pyc
+│   │       ├── __init__.cpython-36.pyc
+│   │       └── __init__.cpython-37.pyc
+│   ├── metrics.py
+│   ├── models
+│   │   ├── gan.py
+│   │   ├── __init__.py
+│   │   ├── loss_calculation.py
+│   │   ├── nn_drop.py
+│   │   └── __pycache__
+│   │       ├── bsc_physgan.cpython-37.pyc
+│   │       ├── double_physgan.cpython-37.pyc
+│   │       ├── gan.cpython-36.pyc
+│   │       ├── gan.cpython-37.pyc
+│   │       ├── __init__.cpython-36.pyc
+│   │       ├── __init__.cpython-37.pyc
+│   │       ├── loss_calculation.cpython-36.pyc
+│   │       ├── loss_calculation.cpython-37.pyc
+│   │       ├── mmt_physgan.cpython-37.pyc
+│   │       ├── nn_drop.cpython-36.pyc
+│   │       ├── nn_drop.cpython-37.pyc
+│   │       └── pinn_drop.cpython-37.pyc
+│   ├── picklefuncs.py
+│   ├── __pycache__
+│   │   ├── argparse.cpython-37.pyc
+│   │   ├── helper_funcs.cpython-36.pyc
+│   │   ├── helper_funcs.cpython-37.pyc
+│   │   ├── __init__.cpython-36.pyc
+│   │   ├── __init__.cpython-37.pyc
+│   │   ├── metrics.cpython-36.pyc
+│   │   ├── metrics.cpython-37.pyc
+│   │   ├── training.cpython-36.pyc
+│   │   ├── training.cpython-37.pyc
+│   │   ├── utils.cpython-36.pyc
+│   │   └── utils.cpython-37.pyc
+│   ├── training.py
+│   └── utils.py
+├── tmp
+│   └── tmp
+└── viz.py
+
+34 directories, 130 files
