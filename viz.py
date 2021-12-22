@@ -59,7 +59,7 @@ def compare_hist_sudoku(y_true, y_pred, kl,
     if "_v" in save_at:
         label_name = "vel"
     else:
-        label_name = "acc"
+        label_name = "velocity"
     # sort the y_true by its mean value/kl in an increasing order
     idx_increase_by_mean = np.argsort(np.mean(y_true, axis=1))
     idx_to_plot = np.empty((level, level), dtype=int)
