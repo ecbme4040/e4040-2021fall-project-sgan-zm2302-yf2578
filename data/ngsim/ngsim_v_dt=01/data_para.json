@@ -1,0 +1,11 @@
+{
+  "train_pool_size": 20000,
+  "validation_pool_size": 5000,
+  "test_pool_size": 5000,
+  "collocation_pool_size": 20000,
+  "n_samples": 100,
+  "action_as": "v",
+  "time_step": 1,
+  "historical_length": 5,
+  "prediction_length": 5
+}
