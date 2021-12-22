@@ -44,7 +44,7 @@ python viz.py --experiment_dir experiments/ngsim/gan --sudoku --interval --metri
 ```
 
 # Code architecture
-####rood directory
+#### rood directory
  - data: a folder containing processed data
  - experiments: folders to save everything related to one training (or one experiment), including 
  - image: images for README.md
